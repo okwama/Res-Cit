@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +8,55 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  title     String
+  desc      String
+  color     String
+  img       String
+  slug      String   @unique
+  products  Product[]
+}
+
+model Product {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  title     String
+  desc      String
+  img       String?
+  price     Decimal
+  isFeatured Boolean  @default(false)
+  options   Option[] // Establish a relation to Option
+  category  Category  @relation(fields: [catSlug], references: [slug])
+  catSlug   String
+  orderProducts OrderProduct[] // Establish a relation to OrderProduct
+}
+
+model Option {
+  id        String   @id @default(cuid())
+  name      String   // Name of the option (e.g., "Size", "Color")
+  value     String   // Value of the option (e.g., "Small", "Red")
+  productId String   // Foreign key to Product
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id        String       @id @default(cuid())
+  createdAt DateTime     @default(now())
+  price     Decimal
+  status    String
+  intent_id String?      @unique
+  products  OrderProduct[] // Establish a relation to OrderProduct
+}
+
+model OrderProduct {
+  id        String   @id @default(cuid())
+  orderId   String   // Foreign key to Order
+  productId String   // Foreign key to Product
+  quantity  Int      // Quantity of the product ordered
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }

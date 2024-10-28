@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mypassword      # Set the root password
+      MYSQL_DATABASE: mydb                  # Optional: Database to create
+      MYSQL_USER: root                    # Optional: User to create
+      MYSQL_PASSWORD: mypassword            # Optional: Password for the user
+    ports:
+      - "3306:3306"                         # Exposing MySQL on port 3306
