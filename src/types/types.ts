@@ -15,3 +15,23 @@ export type MenuType = {
     price: number; 
     options?: { title: string; additionalPrice: number }[];
     };
+    export type OrderType = {
+      arr: any;
+      id: string;
+      userEmail: string;
+      price: number;
+      products: CartItemType[];
+      title: string;
+      status: string;
+      createdAt: Date;
+      intent_id: String;
+      };
+
+      export type CartItemType = { 
+        id: string; 
+        title: string; 
+        img?: string; 
+        price: number; 
+        optionTitle?: string; 
+        quantity: number;
+      };

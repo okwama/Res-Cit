@@ -3,11 +3,12 @@ import Menu from './Menu';
 import Link from "next/link";
 import Image from 'next/image';
 import CartIcon from './CartIcon';
+import UserLinks from './UserLinks';
 
 const Navbar = () => {
   const user = false
   return (
-    <div className='h-10 bg-customGreen text-indigo-950 p-4 flex items-center justify-between border-b-2 border-b-customGreen md:h-24 lg:px-20 xl:px-40 fixed z-50 w-full top-10'>
+    <div className='h-12 bg-customGreen text-indigo-950  p-4 flex items-center justify-between border-b-2 border-b-customGreen uppercase md:h-24 lg:px-20 xl:px-40'>
       {/* LEFT LINKS */}
       <div className='hidden md:flex gap-4 flex-1 '>
         <Link href="/">Homepage</Link>
@@ -30,9 +31,9 @@ const Navbar = () => {
     {/* RIGHT LINKS */}
     <div className='hidden md:flex gap-4 items-center justify-end flex-1' >
         
-        <Link href="/orders">My Orders</Link>
         <Link href="/">Contact</Link>
         <CartIcon/>
+        <UserLinks/>
       </div>
 
     </div>
