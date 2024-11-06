@@ -13,7 +13,7 @@ return (
         <span className="ml-4 cursor-pointer" onClick={()=>signOut()}>Logout</span>
         </div>
         ) : (
-          <Link href="/login">Login</Link>
+          <Link href="/login">L</Link>
         )}
 
     </div>
