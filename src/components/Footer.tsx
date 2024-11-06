@@ -7,7 +7,7 @@ const Footer = () => {
   <Link href="/"> 
   <Image src="/log.png" alt="" className="h-8" width="50" height="100" />
   </Link>
-  <p>© 2023 CJ's. All Rights Reserved</p>
+  <p>© 2023 CIT. All Rights Reserved</p>
 </div>
   )
 }

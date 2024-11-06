@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from 'next/image';
 import CartIcon from './CartIcon';
 import UserLinks from './UserLinks';
+import RegisterPage from '@/app/register/page';
 
 const Navbar = () => {
   const user = false
@@ -34,6 +35,7 @@ const Navbar = () => {
         <Link href="/">Contact</Link>
         <CartIcon/>
         <UserLinks/>
+        <Link href="/register">Register</Link>
       </div>
 
     </div>

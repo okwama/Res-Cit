@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,129 +7,93 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            String          @id @default(cuid())
-  name          String?
-  phone         String?         @unique
-  username      String?         @unique
-  email         String?         @unique
-  emailVerified DateTime?
-  image         String?
-  isAdmin       Boolean         @default(false)
-  accounts      Account[]
-  sessions      Session[]
-  // Optional for WebAuthn support
-  Authenticator Authenticator[]
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  Order Order[]
-}
- 
 model Account {
-  id                       String  @id @default(cuid())
-  userId                   String  @unique
-  type                     String
-  provider                 String
-  providerAccountId        String
-  refresh_token            String? @db.Text
-  access_token             String? @db.Text
-  expires_at               Int?
-  token_type               String?
-  scope                    String?
-  id_token                 String? @db.Text
-  session_state            String?
-  refresh_token_expires_in Int?
-  user                     User?   @relation(fields: [userId], references: [id])
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- 
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerAccountId])
-  @@index([userId])
 }
- 
+
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id])
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- 
-  @@index([userId])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
- 
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  phoneNumber   String   @unique // Add @unique if you want to query by phoneNumber
+  image         String?
+  isAdmin       Boolean   @default(false)
+  password      String    // Add the password field here
+  accounts      Account[]
+  sessions      Session[]
+  orders        Order[]
+}
+
+
 model VerificationToken {
   identifier String
-  token      String
+  token      String   @unique
   expires    DateTime
- 
+
   @@unique([identifier, token])
 }
- 
-// Optional for WebAuthn support
-model Authenticator {
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  @@id([userId, credentialID])
-}
+
 model Category {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
   title     String
   desc      String
   color     String
   img       String
-  slug      String   @unique
+  slug      String    @unique
   products  Product[]
 }
 
 model Product {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  title     String
-  desc      String
-  img       String?
-  price     Decimal
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  title      String
+  desc       String
+  img        String?
+  price      Decimal
   isFeatured Boolean  @default(false)
-  options   Option[] // Establish a relation to Option
-  category  Category  @relation(fields: [catSlug], references: [slug])
-  catSlug   String
-  orderProducts OrderProduct[] // Establish a relation to OrderProduct
-}
-
-model Option {
-  id        String   @id @default(cuid())
-  name      String   // Name of the option (e.g., "Size", "Color")
-  value     String   // Value of the option (e.g., "Small", "Red")
-  productId String   // Foreign key to Product
-  product   Product  @relation(fields: [productId], references: [id])
+  options    String   // Changed Json[] to String to store JSON array as serialized string
+  category   Category @relation(fields: [catSlug], references: [slug])
+  catSlug    String
+  orderProducts OrderProduct[]
 }
 
 model Order {
-  id        String       @id @default(cuid())
-  createdAt DateTime     @default(now())
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
   price     Decimal
+  // products  String  // Changed Json[] to String to store JSON array as serialized string
   status    String
-  intent_id String?      @unique
-  user      User        @relation(fields: [userEmail], references: [email])
+  intent_id String?  @unique
+  user      User     @relation(fields: [userEmail], references: [email])
   userEmail String
-  products  OrderProduct[] // Establish a relation to OrderProduct
-}
+  orderProducts OrderProduct[]
 
+}
 model OrderProduct {
   id        String   @id @default(cuid())
   orderId   String   // Foreign key to Order

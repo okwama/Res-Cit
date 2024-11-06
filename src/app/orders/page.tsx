@@ -1,38 +1,56 @@
 "use client"
-
 import { OrderType } from "@/types/types";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-
-
-
-
-
+import { toast } from "react-toastify";
 
 const OrdersPage = () => {
-    const {data:session,status} = useSession();
+    const {data   : session,status} = useSession();
 
-    const router = useRouter()
+    const router  = useRouter()
 
 
      if(status==="unauthenticated"){
       router.push("/");
     }
 
-    const { isPending, error, data } = useQuery({
-      queryKey: ['Orders'],
-      queryFn: () =>
-        fetch('http://localhost:3000/api/orders').then(
-          (res) => res.json(),
-        ),
-    })
+    const { isLoading, error, data } = useQuery({
+      queryKey    : ['Orders'],
+      queryFn     : () =>
+        fetch("http://localhost:3000/api/orders").then((res) => res.json()),
+    });
   
-    if (isPending || status==="loading") return 'Loading...'
+    const queryClient = useQueryClient()
 
-    console.log(data)
+    const mutation = useMutation({
+     mutationFn:({id,status}:{id:string, status:string})=>{
+     return fetch(`http://localhost:3000/api/orders/${id}`,{
+      method:"PUT",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify(status),
+     });
+   },
+   onSuccess() { 
+   queryClient.invalidateQueries({queryKey:["orders"]});  
+  },
+});
+    const handleUpdate = (e:React.FormEvent<HTMLFormElement>, id: string) => {
+        e.preventDefault()
+        const form = e.target as HTMLFormElement;
+        const input =form.elements[0] as HTMLInputElement;
+        const status = input.value
+
+        mutation.mutate({id,status});
+        toast.success("Order Status Updated")
+
+     };
+
+    if (isLoading || status === "loading") return "Loading..."; 
     return (
     <div className="p-4 lg:px-20 xl:px-40">
       <table className="w-full border-separate border-spacing-3">
@@ -46,20 +64,18 @@ const OrdersPage = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item: OrderType)=>(
-            <tr className="text-sm md:text-base bg-bggreen"key={item.id}>
-            <td className="hidden md:block py-6 px-1">{item.id}</td>
-            <td className="py-6 px-1">{item.createdAt.toString().slice(0, 10)}</td>
-            <td className="py-6 px-1">{item.price}</td>
-            <td className="hidden md:block py-6 px-1">
-              {item.products[0].title}
-              {/* {item.products?.[0]?.title ?? 'No products'} */}
-
+          {data.map((item   : OrderType)=>(
+            <tr className   = {`${item.status !=="delivered" && "bg-red-200"}`}key={item.id}>
+            <td className   = "hidden md:block py-6 px-1">{item.id}</td>
+            <td className   = "py-6 px-1">{item.createdAt.toString().slice(0, 10)}</td>
+            <td className   = "py-6 px-1">{item.price}</td>
+            <td className   = "hidden md:block py-6 px-1">
+              {/* {item.products[0].title} */}Pizza
             </td>
               {
               session?.user.isAdmin ? (
                 <td>
-                  <form className="flex items-center justify-center gap-4">
+                  <form className="flex items-center justify-center gap-4 " onSubmit={(e)=> handleUpdate(e,item.id)}>
                   <input 
                 placeholder={item.status} className="p-2 ring-1 ring-customGreen rounded-md"
                 />

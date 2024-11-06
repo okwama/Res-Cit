@@ -15,16 +15,16 @@ export type MenuType = {
     price: number; 
     options?: { title: string; additionalPrice: number }[];
     };
-    export type OrderType = {
-      arr: any;
+  export type OrderType = {
+      // arr: any;
       id: string;
       userEmail: string;
       price: number;
       products: CartItemType[];
-      title: string;
+      // title: string;
       status: string;
       createdAt: Date;
-      intent_id: String;
+      intent_id?: String;
       };
 
       export type CartItemType = { 
@@ -35,3 +35,14 @@ export type MenuType = {
         optionTitle?: string; 
         quantity: number;
       };
+
+      export type CartType = {
+        products: CartItemType[];
+        totalItems: number;
+        totalPrice: number;
+      };
+      
+      export type ActionTypes = {
+        addToCart:(item:CartItemType)=> void;
+        removeFromCart:(item:CartItemType)=> void;
+      }

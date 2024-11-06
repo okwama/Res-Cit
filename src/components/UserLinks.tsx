@@ -8,7 +8,7 @@ const {status} = useSession()
 return (
 <div>
      {status === "authenticated"? (
-        <div>
+        <div className=" bg-customGreen text-indigo-950 ">
         <Link href="/orders">Orders</Link>
         <span className="ml-4 cursor-pointer" onClick={()=>signOut()}>Logout</span>
         </div>
