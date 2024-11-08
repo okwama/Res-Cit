@@ -12,23 +12,27 @@ const getData =  async () => {
   }
   return res.json()
 }
-const MenuPage = async () => {
 
-  const menu:MenuType = await getData()
+const MenuPage = async () => {
+  const menu: MenuType = await getData();
+  
   return (
-    <div className="p-4 lg:px-20 xl:px-40 h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] flex flex-col md:flex-row items-center">
+    <div className="p-4 lg:px-20 xl:px-40 h-auto flex flex-wrap items-center overflow-hidden">
       {menu.map((category) => (
         <Link
           href={`/menu/${category.slug}`}
           key={category.id as React.Key}
-          className="w-full h-1/3 bg-cover p-8 md:h-1/2"
+          className="flex flex-col w-full md:w-1/3 h-1/3 bg-cover p-4 overflow-hidden relative"
           style={{ backgroundImage: `url(${category.img})` }}
         >
-          <div className={`text-${category.color} w-1/2`}>
+          <div className="absolute inset-0 bg-customGreen opacity-30"></div> {/* Tint overlay */}
+          <div className={`text-${category.color} w-full flex flex-col relative z-10`}>
             <h1 className="uppercase font-bold text-3xl">{category.title}</h1>
-            <p className="text-sm my-8">{category.desc}</p>
-            <button className="hidden md:block bg-customGreen text-indigo-950 py-2 px-4 rounded-md"
-            >Explore</button> </div>
+            <p className="whitespace-wrap text-sm my-8">{category.desc}</p>
+            <button className="hidden md:block bg-customGreen text-indigo-950 py-2 px-4 rounded-md">
+              Explore
+            </button>
+          </div>
         </Link>
       ))}
     </div>

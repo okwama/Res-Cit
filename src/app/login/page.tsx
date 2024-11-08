@@ -26,7 +26,10 @@ const LoginPage = () => {
       email,
       password,
     });
-
+    
+    console.log(result); // Log the result for debugging
+    
+    
     if (result?.error) {
       toast.error("Invalid credentials. Please try again."); // Show error toast
     } else {

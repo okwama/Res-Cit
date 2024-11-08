@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* br {
+    margin-bottom: 1rem;
+    display: block;
+    content: "";
+  } */
+  

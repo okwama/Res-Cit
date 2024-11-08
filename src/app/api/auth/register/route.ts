@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
   try {
     // Check if user already exists
-    const [existingUsers]: [any[], any] = await connection.execute('SELECT * FROM User WHERE email = ?', [email]);
+    const [existingUsers]: [any[], any] = await connection.execute('SELECT * FROM user WHERE email = ?', [email]);
 
     if (existingUsers.length > 0) {
       return new Response(JSON.stringify({ message: 'User  already exists.' }), {
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     }
 
     // Check if phone number already exists
-    const [existingPhoneUsers]: [any[], any] = await connection.execute('SELECT * FROM User WHERE phoneNumber = ?', [phoneNumber]);
+    const [existingPhoneUsers]: [any[], any] = await connection.execute('SELECT * FROM user WHERE phoneNumber = ?', [phoneNumber]);
 
     if (existingPhoneUsers.length > 0) {
       return new Response(JSON.stringify({ message: 'Phone number is already in use.' }), {
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user in the database
-    await connection.execute('INSERT INTO User (email, password, phoneNumber) VALUES (?, ?, ?)', [email, hashedPassword, phoneNumber]);
+    await connection.execute('INSERT INTO user (email, password, phoneNumber) VALUES (?, ?, ?)', [email, hashedPassword, phoneNumber]);
 
     // Return the user data without the password
     return new Response(JSON.stringify({ user: { email, phoneNumber } }), {
