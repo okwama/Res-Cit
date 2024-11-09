@@ -12,8 +12,8 @@ const OrdersPage = () => {
   const { data: session, status } = useSession();
   const [isMounted, setIsMounted] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]); // Track selected orders
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state for confirmation
   const router = useRouter();
-
   const queryClient = useQueryClient();
 
   // Ensure the component is mounted before using useRouter
@@ -48,24 +48,6 @@ const OrdersPage = () => {
     },
   });
 
-  // Mutation to delete selected orders
-  const deleteMutation = useMutation({
-    mutationFn: async () => {
-      await Promise.all(
-        selectedOrders.map((id) =>
-          fetch(`http://localhost:3000/api/orders/${id}`, {
-            method: "DELETE",
-          })
-        )
-      );
-    },
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
-      setSelectedOrders([]);
-      toast.success("Selected orders deleted");
-    },
-  });
-
   // Handle order selection
   const toggleOrderSelection = (orderId: string) => {
     setSelectedOrders((prev) =>
@@ -79,7 +61,7 @@ const OrdersPage = () => {
       toast.error("No orders selected");
       return;
     }
-    deleteMutation.mutate();
+    setIsModalOpen(true); // Open the confirmation modal
   };
 
   // Handle update status form submission
@@ -89,23 +71,68 @@ const OrdersPage = () => {
     updateStatusMutation.mutate({ id, status });
   };
 
+  // Handle deletion confirmation
+  const handleConfirmDelete = () => {
+    if (selectedOrders.length > 0) {
+      // Perform deletion logic here
+      Promise.all(
+        selectedOrders.map((id) =>
+          fetch(`http://localhost:3000/api/orders/${id}`, {
+            method: "DELETE",
+          })
+        )
+      ).then(() => {
+        queryClient.invalidateQueries({ queryKey: ["orders"] });
+        setSelectedOrders([]);
+        setIsModalOpen(false); // Close the modal after deletion
+        toast.success("Selected orders deleted");
+      });
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setIsModalOpen(false);
+    setSelectedOrders([]);
+  };
+
   // Handle confirm order action
-  const handleConfirmOrder = (orderId: string) => {
+  const handleConfirmOrder = (order: OrderType) => {
+    const orderId = order.id; // Ensure you have the correct order ID
     router.push(`/cart?order=${orderId}`);
   };
 
   if (isLoading || status === "loading") return <div>Loading...</div>;
   if (error) return <div>Error loading orders</div>;
 
+  // Check if data is defined and has orders
+  if (!data || data.length === 0) {
+    return <div>No orders found.</div>;
+  }
+
   return (
     <div className="p-4 lg:px-20 xl:px-40">
       {/* Delete Selected Orders Button */}
       <button
-        onClick={handleDeleteSelectedOrders}
+        onClick={ handleDeleteSelectedOrders}
         className="bg-red-500 text-white p-2 rounded-md mb-4"
-        disabled={deleteMutation.isPending}
       >
         Delete Selected Orders
+      </button>
+
+      {/* Add Item Button */}
+      <button
+        onClick={() => router.push('/menu')}
+        className="bg-blue-500 text-white p-2 rounded-md mb-4 ml-2"
+      >
+        Add Item
+      </button>
+
+      {/* Confirm Order Button */}
+      <button
+        onClick={() => handleConfirmOrder(data[0])} // Assuming you want to confirm the first order
+        className="bg-green-500 text-white p-2 rounded-md mb-4 ml-2"
+      >
+        Confirm Order
       </button>
 
       {/* Table Container */}
@@ -120,19 +147,13 @@ const OrdersPage = () => {
               <th className="hidden md:block">Products</th>
               <th>Status</th>
               <th className="hidden md:block">Table Number</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {data?.map((item: OrderType) => (
-              <tr
-                key={item.id}
-                className={`${
-                  item.status !== "delivered" ? "bg-orange-100" : ""
-                } shadow-md focus:ring-2 bg-green-200 p-4`} // Card styling for each row
-              >
+            {data.map((item: OrderType) => (
+              <tr key={item.id} className={`${item.status !== "delivered" && "bg-red-200"}`}>
                 <td>
-                  <input className="items-center justify-center"
+                  <input
                     type="checkbox"
                     checked={selectedOrders.includes(item.id)}
                     onChange={() => toggleOrderSelection(item.id)}
@@ -142,14 +163,14 @@ const OrdersPage = () => {
                 <td className="py-6 px-1">{item.createdAt.toString().slice(0, 10)}</td>
                 <td className="py-6 px-1">{item.price}</td>
                 <td className="hidden md:block py-6 px-1">
-                  {item.products && item.products.length > 0
-                    ? item.products[0]?.title
-                    : "No product available"}
+                  {item.orderProducts && item.orderProducts.length > 0
+                    ? item.orderProducts.map(product => product.product.title).join(", ") || "No product available"
+                    : "No products"}
                 </td>
                 {session?.user.isAdmin ? (
                   <td>
                     <form
-                      className="flex items-center gap-4"
+                      className="flex items-center justify-center gap-4"
                       onSubmit={(e) => handleStatusUpdate(e, item.id)}
                     >
                       <input
@@ -165,19 +186,29 @@ const OrdersPage = () => {
                   <td className="py-6 px-1">{item.status}</td>
                 )}
                 <td className="py-6 px-1">{item.tableNo}</td>
-                <td>
-                  <button
-                    onClick={() => handleConfirmOrder(item.id)}
-                    className="bg-customGreen text-indigo-950 p-2 rounded-md"
-                  >
-                    Confirm Order
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Confirmation Modal for Deletion */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-md">
+            <h2 className="text-lg font-bold">Confirm Deletion</h2>
+            <p>Are you sure you want to delete the selected orders?</p>
+            <div className="mt-4">
+              <button onClick={handleConfirmDelete} className="bg-red-500 text-white p-2 rounded-md mr-2">
+                Confirm
+              </button>
+              <button onClick={handleCancelDelete} className="bg-gray-300 p-2 rounded-md">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
