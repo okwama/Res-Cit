@@ -11,7 +11,10 @@ import { toast } from "react-toastify";
 const OrdersPage = () => {
   const { data: session, status } = useSession();
   const [isMounted, setIsMounted] = useState(false);
+  const [selectedOrders, setSelectedOrders] = useState<string[]>([]); // Track selected orders
   const router = useRouter();
+
+  const queryClient = useQueryClient();
 
   // Ensure the component is mounted before using useRouter
   useEffect(() => {
@@ -31,95 +34,149 @@ const OrdersPage = () => {
     queryFn: () => fetch("http://localhost:3000/api/orders", { method: "GET" }).then((res) => res.json()),
   });
 
-  const queryClient = useQueryClient();
-
   // Mutation to update order status
-  const mutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: string }) => {
-      return fetch(`http://localhost:3000/api/orders/${id}`, {
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      fetch(`http://localhost:3000/api/orders/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
-      });
-    },
-    onSuccess() {
+      }),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       toast.success("Order Status Updated");
     },
   });
 
-  const handleUpdate = (e: React.FormEvent<HTMLFormElement>, id: string) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const input = form.elements[0] as HTMLInputElement;
-    const status = input.value;
+  // Mutation to delete selected orders
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      await Promise.all(
+        selectedOrders.map((id) =>
+          fetch(`http://localhost:3000/api/orders/${id}`, {
+            method: "DELETE",
+          })
+        )
+      );
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      setSelectedOrders([]);
+      toast.success("Selected orders deleted");
+    },
+  });
 
-    mutation.mutate({ id, status });
+  // Handle order selection
+  const toggleOrderSelection = (orderId: string) => {
+    setSelectedOrders((prev) =>
+      prev.includes(orderId) ? prev.filter((id) => id !== orderId) : [...prev, orderId]
+    );
   };
 
-  // Check for loading state or errors
+  // Handle delete action
+  const handleDeleteSelectedOrders = () => {
+    if (selectedOrders.length === 0) {
+      toast.error("No orders selected");
+      return;
+    }
+    deleteMutation.mutate();
+  };
+
+  // Handle update status form submission
+  const handleStatusUpdate = (e: React.FormEvent<HTMLFormElement>, id: string) => {
+    e.preventDefault();
+    const status = (e.currentTarget.elements[0] as HTMLInputElement).value;
+    updateStatusMutation.mutate({ id, status });
+  };
+
+  // Handle confirm order action
+  const handleConfirmOrder = (orderId: string) => {
+    router.push(`/cart?order=${orderId}`);
+  };
+
   if (isLoading || status === "loading") return <div>Loading...</div>;
   if (error) return <div>Error loading orders</div>;
 
-  // Safely access `data` to ensure it's not undefined
-  if (!data || data.length === 0) {
-    return <div>No orders found.</div>;
-  }
-
   return (
     <div className="p-4 lg:px-20 xl:px-40">
-      <table className="w-full border-separate border-spacing-3">
-        <thead>
-          <tr className="text-left">
-            <th className="hidden md:block">Order ID</th>
-            <th>Date</th>
-            <th>Price</th>
-            <th className="hidden md:block">Products</th>
-            <th>Status</th>
-            <th className="hidden md:block">Table Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item: OrderType) => (
-            <tr key={item.id} className={`${item.status !== "delivered" && "bg-red-200"}`}>
-              <td className="hidden md:block py-6 px-1">{item.id}</td>
-              <td className="py-6 px-1">{item.createdAt.toString().slice(0, 10)}</td>
-              <td className="py-6 px-1">{item.price}</td>
-              <td className="hidden md:block py-6 px-1">
-                {item.orderProducts && item.orderProducts.length > 0
-                  ? item.orderProducts[0]?.product?.title || "No product available"
-                  : "No products"}
-              </td>
-              {session?.user.isAdmin ? (
-                <td>
-                  <form
-                    className="flex items-center justify-center gap-4"
-                    onSubmit={(e) => handleUpdate(e, item.id)}
-                  >
-                    <input
-                      placeholder={item.status}
-                      className="p-2 ring-1 ring-customGreen rounded-md"
-                    />
-                    <button type="submit" className="bg-customGreen p-2 rounded-full">
-                      <Image src="/edit.png" alt="Edit" width={20} height={20} />
-                    </button>
-                  </form>
-                </td>
-              ) : (
-                <td className="py-6 px-1">{item.status}</td>
-              )}
-              <td className="py-6 px-1">{item.tableNo}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Delete Selected Orders Button */}
+      <button
+        onClick={handleDeleteSelectedOrders}
+        className="bg-red-500 text-white p-2 rounded-md mb-4"
+        disabled={deleteMutation.isPending}
+      >
+        Delete Selected Orders
+      </button>
 
-      {/* Action Buttons */}
-      <div className="mt-4">
-        <button className="bg-customGreen text-indigo-950 p-2 rounded-md mr-4">Add Item</button>
-        <button className="bg-customGreen text-indigo-950 p-2 rounded-md float-right">Confirm Order</button>
+      {/* Table Container */}
+      <div className="overflow-x-auto">
+        <table className="w-full border-separate border-spacing-3">
+          <thead>
+            <tr className="text-left">
+              <th>Select</th>
+              <th className="hidden md:block">Order ID</th>
+              <th>Date</th>
+              <th>Price</th>
+              <th className="hidden md:block">Products</th>
+              <th>Status</th>
+              <th className="hidden md:block">Table Number</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data?.map((item: OrderType) => (
+              <tr
+                key={item.id}
+                className={`${
+                  item.status !== "delivered" ? "bg-orange-100" : ""
+                } shadow-md focus:ring-2 bg-green-200 p-4`} // Card styling for each row
+              >
+                <td>
+                  <input className="items-center justify-center"
+                    type="checkbox"
+                    checked={selectedOrders.includes(item.id)}
+                    onChange={() => toggleOrderSelection(item.id)}
+                  />
+                </td>
+                <td className="hidden md:block py-6 px-1">{item.id}</td>
+                <td className="py-6 px-1">{item.createdAt.toString().slice(0, 10)}</td>
+                <td className="py-6 px-1">{item.price}</td>
+                <td className="hidden md:block py-6 px-1">
+                  {item.products && item.products.length > 0
+                    ? item.products[0]?.title
+                    : "No product available"}
+                </td>
+                {session?.user.isAdmin ? (
+                  <td>
+                    <form
+                      className="flex items-center gap-4"
+                      onSubmit={(e) => handleStatusUpdate(e, item.id)}
+                    >
+                      <input
+                        placeholder={item.status}
+                        className="p-2 ring-1 ring-customGreen rounded-md"
+                      />
+                      <button type="submit" className="bg-customGreen p-2 rounded-full">
+                        <Image src="/edit.png" alt="Edit" width={20} height={20} />
+                      </button>
+                    </form>
+                  </td>
+                ) : (
+                  <td className="py-6 px-1">{item.status}</td>
+                )}
+                <td className="py-6 px-1">{item.tableNo}</td>
+                <td>
+                  <button
+                    onClick={() => handleConfirmOrder(item.id)}
+                    className="bg-customGreen text-indigo-950 p-2 rounded-md"
+                  >
+                    Confirm Order
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
