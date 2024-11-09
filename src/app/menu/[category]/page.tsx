@@ -23,21 +23,22 @@ const CategoryPage = async ({ params }: Props) => {
 
   const products: ProductType[] = await getData(category);
   return (
-    <div className='flex flex-wrap text-indigo-950'>
+    <div className='flex flex-wrap text-indigo-950 '>
       {products.map(item => (
-        <Link className='w-full h-[60vh] border-b-2 border-r-2 border-customGreen sm:w-1/2 lg:w-1/3 p-4 flex flex-col justify-between group odd:bg-bggreen' href={`/product/${item.id}`} key={item.id}>
+        <Link className='w-full h-[25vh] border-b-2 border-r-2 border-customGreen shadow sm:w-1/2 lg:w-1/3 p-4 flex flex-row justify-between group odd:bg-bggreen' href={`/product/${item.id}`} key={item.id}>
           {/* IMAGE CONTAINER */}
           {item.img && (
             <div className="relative h-[80%]">
-              <Image src={item.img} alt="" fill className='object-contain' />
+              <Image src={item.img} alt="" height={250} width={250} className='object-contain rounded-md' />
             </div>
           )}
 
           {/* TEXT CONTAINER */}
-          <div className='flex items-center justify-between font-bold '>
-            <h1 className='text-2xl uppercase p-2'>{item.title}</h1>
-            <h2 className='group-hover:hidden text-xl'>KSh{item.price}</h2>
-            <button className='hidden group-hover:block uppercase bg-customGreen text-indigo-950 p-2 rounded-md'>Order</button>
+          <div className='flex flex-col ml-5'>
+            <h1 className='sm:text-sm uppercase'>{item.title}</h1>
+            <p className='text-[12px]'>{item.desc}</p>
+            <h2 className='text-sm text-red-300'>KSh.{item.price}</h2>
+            <button className='group-hover:block uppercase bg-customGreen text-indigo-950 p-2 rounded-md w-20 text-sm'>Order</button>
           </div>
         </Link>
       ))}

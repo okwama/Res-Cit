@@ -16,6 +16,7 @@ const getData = async ()=>{
 
 const Featured = async () => {
 
+  
   const featuredProducts:ProductType[] = await getData()
 
   return (
@@ -39,7 +40,8 @@ const Featured = async () => {
               <h1 className="text-xl font-bold uppercase xl:text-2xl 2xl:text-3xl">{item.title}</h1>
               <p className="p-4 2xl:p-8">{item.desc}</p>
               <span className="text-xl font-bold">KSh {item.price}</span>
-              <button className="bg-customGreen text-indigo-950 p-2 rounded-md">
+              <button className="bg-customGreen text-indigo-950 p-2 rounded-md"
+                >
                 Add to Cart
               </button>
             </div>

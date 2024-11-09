@@ -1,14 +1,18 @@
 version: '3.1'
 
 services:
-
   db:
-    image: mysql
+    image: mysql:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: mypassword      # Set the root password
-      MYSQL_DATABASE: mydb                  # Optional: Database to create
-      MYSQL_USER: root                    # Optional: User to create
-      MYSQL_PASSWORD: mypassword            # Optional: Password for the user
+      MYSQL_ROOT_PASSWORD: mypassword          # Set the root password (required)
+      # MYSQL_ALLOW_EMPTY_PASSWORD: "yes"      # Uncomment to allow an empty password
+      # MYSQL_RANDOM_ROOT_PASSWORD: "yes"      # Uncomment to use a random password
+      MYSQL_DATABASE: mydb                      # Optional: Database to create
     ports:
-      - "3306:3306"                         # Exposing MySQL on port 3306
+      - "3306:3306"                             # Exposing MySQL on port 3306
+    volumes:
+      - db_data:/var/lib/mysql                  # Persisting database data
+
+volumes:
+  db_data:

@@ -16,21 +16,25 @@ const Navbar = () => {
         <Link href="/">Contact</Link>
       </div>
           {/* LOGO */}
-<div className="flex justify-center items-center text-xl md:font-bold flex-1">
-  <Link href="/">
-    <Image 
-      src="https://ik.imagekit.io/bja2qwwdjjy/Artboard%201@1.5x_sHGlLMjLB.png?updatedAt=1730979703401" 
+          
+      <div className="flex justify-center items-center text-xl md:font-bold flex-1">
+  
+      <Link href="/">
+      <Image 
+      src="/macaash.png" 
       alt="logo" 
-      width={50} 
-      height={15} 
-      objectFit="contain" 
-    />
-  </Link>
-</div>
+      width={100} 
+      height={50} 
+      objectFit="contain" />
+      </Link>
+      </div>
+
 
       {/* MOBILE MENU */}
+      <div className="md:hidden flex-1 h-auto w-auto object-contain" ><CartIcon /></div>
       <div className="md:hidden">
         <Menu />
+        
       </div>
       {/* RIGHT LINKS */}
       <div className="hidden md:flex gap-4 items-center justify-end flex-1">

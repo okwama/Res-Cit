@@ -15,17 +15,32 @@ export type MenuType = {
     price: number; 
     options?: { title: string; additionalPrice: number }[];
     };
-  export type OrderType = {
-      // arr: any;
+ 
+   // Define Product type with necessary fields like title, id, etc.
+  export interface Product {
+    id: string;
+    title: string;
+    price: number;
+  // other fields related to the product can be added here
+}
+
+    export interface OrderProduct {
+      productId: string;
+      quantity: number;
+      product: Product; // Nested product data
+    }
+    
+    export type OrderType = {
       id: string;
       userEmail: string;
       price: number;
       products: CartItemType[];
-      // title: string;
       status: string;
       createdAt: Date;
+      tableNo?: number;
       intent_id?: String;
-      };
+      orderProducts: OrderProduct[]; // Ensure this is included
+};
 
       export type CartItemType = { 
         id: string; 

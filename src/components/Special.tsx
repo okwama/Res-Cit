@@ -37,7 +37,9 @@ const [currentSlide, setCurrentSlide] = useState(0)
         <h1 className='text-5xl text-center uppercase p-4 md:p-10 md:text-6xl xl:text-7xl'>
           {data[currentSlide].title}
         </h1>
-        <button className='bg-customGreen text-indigo-950 py-4 px-8'>Place Order</button>
+        <button  className="bg-customGreen text-indigo-950 py-4 px-8"
+        onClick={() => window.location.href='/menu'}>
+          Place Order</button>
       </div>
 
 

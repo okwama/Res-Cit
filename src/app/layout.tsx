@@ -29,7 +29,7 @@ export default function RootLayout({
 
           
         <div>
-          <Notification />
+          {/* <Notification /> */}
           <Navbar />
           {children}
           <Footer />

@@ -29,11 +29,12 @@ const CartIcon = () => {
             className="object-contain"
           />
         </div>
-        {session?.user.isAdmin ? (
+        {/* {session?.user.isAdmin ? (
           <button className="p-1 bg-customGreen text-indigo-950 rounded-md">Add product</button>
         ) : (
           <span>Cart ({totalItems})</span>
-        )}
+        )} */}
+        <span>Cart ({totalItems})</span>
       </div>
     </Link>
   );

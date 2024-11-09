@@ -25,11 +25,11 @@ const MenuPage = async () => {
           className="flex flex-col w-full md:w-1/3 h-1/3 bg-cover p-4 overflow-hidden relative"
           style={{ backgroundImage: `url(${category.img})` }}
         >
-          <div className="absolute inset-0 bg-customGreen opacity-30"></div> {/* Tint overlay */}
+          <div className="absolute inset-0 bg-customGreen opacity-0"></div> {/* Tint overlay */}
           <div className={`text-${category.color} w-full flex flex-col relative z-10`}>
             <h1 className="uppercase font-bold text-3xl">{category.title}</h1>
             <p className="whitespace-wrap text-sm my-8">{category.desc}</p>
-            <button className="hidden md:block bg-customGreen text-indigo-950 py-2 px-4 rounded-md">
+            <button className="md:block bg-customGreen text-indigo-950 py-2 px-4 rounded-md">
               Explore
             </button>
           </div>

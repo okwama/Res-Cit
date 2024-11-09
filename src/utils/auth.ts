@@ -5,13 +5,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "./connect";
 import bcrypt from "bcrypt"; // For password hashing
-// import * as bcrypt from 'bcryptjs';
-// or
-// import bcrypt from 'bcryptjs';
 
-
-declare module "next-auth" {
-  interface Session {
+declare module "next-auth" {interface Session {
     user: User & {
       isAdmin: Boolean
     }
@@ -22,7 +17,6 @@ declare module "next-auth/jwt" {
     isAdmin: Boolean
   }
 }
-
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {

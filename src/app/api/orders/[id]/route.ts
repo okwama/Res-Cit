@@ -1,32 +1,32 @@
 import prisma from "@/utils/connect";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
+
+// CHANGE THE STATUS OF AN ORDER
 export const PUT = async (
-    req:NextResponse,
-    { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: { id: string } }
 ) => {
-const { id }  = params;
+  const { id } = params;
 
-try {
-   const body = await req.json()
+  try {
+    const body = await req.json();
 
-   await prisma.order.update({
-    where:{
-        id  : id
-    },
-    data: {status: body },
-});    
+    await prisma.order.update({
+      where: {
+        id: id,
+      },
+      data: { status: body },
+    });
     return new NextResponse(
-    JSON.stringify({ message    : "Order has been updated!" }),
-    {status:200}
-);
-
-} catch (err) {
-    console.log(err)
+      JSON.stringify({ message: "Order has been updated!" }),
+      { status: 200 }
+    );
+  } catch (err) {
+    console.log(err);
     return new NextResponse(
-    JSON.stringify({ message    : "something went wrong" }),
-    {status:500}
-);
-}
-
+      JSON.stringify({ message: "Something went wrong!" }),
+      { status: 500 }
+    );
+  }
 };
