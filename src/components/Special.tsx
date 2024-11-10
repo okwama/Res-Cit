@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 const data = [
   {id:1,
-    title:"Welcome to CJ's delicious universe",
+    title:"Welcome to Macaash delicious universe",
     image:"/new.jpg",
   },
   {id:2,
@@ -31,22 +31,22 @@ const [currentSlide, setCurrentSlide] = useState(0)
   // },[]);
 
   return (
-    <div className='flex flex-col h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] lg:flex-row bg-bggreen mt-16'>
+    <div className='flex flex-col lg:h-[calc(60vh-6rem)] md:h-[calc(60vh-6rem)] sm:h-[calc(10vh-6rem)] lg:flex-row bg-bggreen mt-6'>
       {/* TEXT CONTAINER */}
       <div className='flex-1 flex items-center justify-center flex-col gap-8 text-indigo-950 font-bold '>
-        <h1 className='text-5xl text-center uppercase p-4 md:p-10 md:text-6xl xl:text-7xl'>
+        <h1 className='text-5xl lg:text-5xl text-center uppercase p-4  md:p-10 md:text-6xl xl:text-7xl'>
           {data[currentSlide].title}
         </h1>
-        <button  className="bg-customGreen text-indigo-950 py-4 px-8"
+        {/* <button  className="bg-customGreen text-indigo-950 py-2 px-8"
         onClick={() => window.location.href='/menu'}>
-          Place Order</button>
+          Place Order</button> */}
       </div>
 
 
 
       {/* IMAGE CONTAINER */}
-     <div className='flex-1 relative lg:h-full '>
-      <Image src={data[currentSlide].image} alt="" fill className='object-cover'/>
+     <div className='flex-row relative lg:h-0 '>
+      {/* <Image src={data[currentSlide].image} alt="" fill className='object-cover'/> */}
      </div>
 
 

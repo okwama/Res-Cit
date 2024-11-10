@@ -14,7 +14,7 @@ const getData =  async () => {
   return res.json()
 }
 
-const MenuPage = async () => {
+const HomeMenu = async () => {
   const menu: MenuType = await getData();
   
   return (
@@ -30,7 +30,7 @@ const MenuPage = async () => {
           <div className={`text-${category.color} w-full flex flex-col relative z-10`}>
             <h1 className="uppercase font-bold text-3xl">{category.title}</h1>
             <p className="whitespace-wrap text-sm my-8">{category.desc}</p>
-            <button className="md:block bg-customGreen text-indigo-950 py-2 px-4 rounded-md">
+            <button className="md:block bg-customGreen text-indigo-950 py-2 px-4 w-20 rounded-md">
               Explore
             </button>
           </div>
@@ -40,4 +40,4 @@ const MenuPage = async () => {
   );
 };
 
-export default MenuPage;
+export default HomeMenu;

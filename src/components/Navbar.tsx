@@ -8,7 +8,7 @@ import UserLinks from "./UserLinks";
 const Navbar = () => {
   const user = false;
   return (
-    <div className="h-12 text-indigo-950 p-4 flex items-center justify-between border-b-2 border-b-customGreen uppercase md:h-24 lg:px-20 xl:px-40">
+    <div className="h-12 text-indigo-950 p-4 flex items-center justify-between border-b-2 border-b-customGreen md:h-24 lg:px-20 xl:px-40">
       {/* LEFT LINKS */}
       <div className="hidden md:flex gap-4 flex-1">
         <Link href="/">Homepage</Link>
@@ -19,19 +19,21 @@ const Navbar = () => {
           
       <div className="flex justify-center items-center text-xl md:font-bold flex-1">
   
-      <Link href="/">
-      <Image 
-      src="/macaash.png" 
+      <Link href="/"><h2 className="font-extrabold">Macaash</h2>
+      {/* <Image 
+      src="/mac.png" 
       alt="logo" 
-      width={100} 
-      height={50} 
-      objectFit="contain" />
+      width={150} 
+      height={150} 
+      objectFit="contain" /> */}
+      
       </Link>
       </div>
 
 
       {/* MOBILE MENU */}
-      <div className="md:hidden flex-1 h-auto w-auto object-contain" ><CartIcon /></div>
+      <div className="md:hidden flex items-end px-10 h-auto w-auto object-contain" ><CartIcon /></div>
+      <Link href="/orders">Orders</Link>
       <div className="md:hidden">
         <Menu />
         

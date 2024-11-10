@@ -82,7 +82,7 @@ const Price = ({ product }: { product: ProductType }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 ">
       <h2 className="text-2xl font-bold">Ksh {total}</h2>
 
       {/* OPTIONS CONTAINER */}

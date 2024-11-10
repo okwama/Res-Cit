@@ -19,22 +19,22 @@ const CartIcon = () => {
   },[])
   return (
     <Link href={session?.user.isAdmin ? "/add" : "/cart"}>
-      <div className="flex items-center gap-4">
+      <div className="flex relative items-right">
         <div className="relative w-8 h-8 md:w-5 md:h-5">
           <Image
-            src="/cart.png"
+            src="https://ik.imagekit.io/bja2qwwdjjy/shopping-cart_zcAyKK_tS.png?updatedAt=1731231750808"
             alt=""
             fill
-            sizes="100%"
             className="object-contain"
           />
+          
         </div>
         {/* {session?.user.isAdmin ? (
           <button className="p-1 bg-customGreen text-indigo-950 rounded-md">Add product</button>
         ) : (
           <span>Cart ({totalItems})</span>
         )} */}
-        <span>Cart ({totalItems})</span>
+        <span>({totalItems})</span>
       </div>
     </Link>
   );

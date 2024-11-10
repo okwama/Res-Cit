@@ -11,9 +11,9 @@ const Offer = () => {
           We're committed to great food, great coffee, great service, an experience that will make your time with us fabulous. 
           All visuals are serving suggestions only.
         </p>
-        <button className='bg-customGreen text-indigo-950 rounded-md py-3 px-6'>
+        {/* <button className='bg-customGreen text-indigo-950 rounded-md py-3 px-6'>
           Cancel Order
-        </button>
+        </button> */}
       </div>
 
       {/* IMAGE CONTAINER */}
