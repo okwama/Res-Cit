@@ -7,8 +7,8 @@ export const GET = async () => {
 
 
 
-const categories = await prisma.category.findMany()
-return new NextResponse(JSON.stringify(categories),
+const sub_categories = await prisma.subCategory.findMany()
+return new NextResponse(JSON.stringify(sub_categories),
 { status: 200 }
 );
 

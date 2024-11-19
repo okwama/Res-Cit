@@ -38,7 +38,7 @@ const CategoryPage = async ({ params }: Props) => {
             <h1 className='sm:text-sm uppercase'>{item.title}</h1>
             <p className='text-[12px]'>{item.desc}</p>
             <h2 className='text-sm text-red-300'>KSh.{item.price}</h2>
-            <button className='group-hover:block uppercase bg-customGreen text-indigo-950 p-2 rounded-md w-20 text-sm'>Order</button>
+            <button className='group-hover:block uppercase bg-customGreen text-indigo-950 p-2 rounded-md w-20 text-sm'>Explore sub</button>
           </div>
         </Link>
       ))}

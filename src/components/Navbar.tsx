@@ -19,13 +19,13 @@ const Navbar = () => {
           
       <div className="flex justify-center items-center text-xl md:font-bold flex-1">
   
-      <Link href="/"><h2 className="font-extrabold">Macaash</h2>
-      {/* <Image 
-      src="/mac.png" 
+      <Link href="/"><h2 className="font-extrabold"></h2>
+      <Image 
+      src="/maa.png" 
       alt="logo" 
       width={150} 
       height={150} 
-      objectFit="contain" /> */}
+      objectFit="contain" />
       
       </Link>
       </div>

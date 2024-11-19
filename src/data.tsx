@@ -368,16 +368,16 @@ type Product = {
   export const menu: Menu = [
     {
       id: 1,
-      slug: "pastas",
-      title: "Italian Pastas",
+      slug: "breakfast",
+      title: "BREAKFAST",
       desc: "Savor the taste of perfection with our exquisite Italian handmade pasta menu.",
       img: "/temporary/m1.png",
       color: "white",
     },
     {
       id: 2,
-      slug: "burgers",
-      title: "Juicy Burgers",
+      slug: "main_dishes",
+      title: "MAIN DISHES",
       desc: "Burger Bliss: Juicy patties, bold flavors, and gourmet toppings galore.",
       img: "/temporary/m2.png",
       color: "black",

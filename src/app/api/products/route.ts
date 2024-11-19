@@ -13,7 +13,7 @@ try{
 const products = await prisma.product.findMany({
 
     where:{
-       ...(cat ? { catSlug: cat } : { isFeatured: true }), 
+       ...(cat ? { subSlug: cat } : { isFeatured: true }), 
     },
 });
 return new NextResponse(JSON.stringify(products),

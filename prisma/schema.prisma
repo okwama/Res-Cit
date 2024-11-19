@@ -67,8 +67,25 @@ model Category {
   img       String
   slug      String    @unique
   products  Product[]
+  subCategory SubCategory[]
+  
+
 }
 
+model SubCategory {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  title     String
+  desc      String
+  color     String
+  img       String
+  slug      String    @unique
+  products  Product[]
+  Category   Category @relation(fields: [catSlug], references: [slug])
+  catSlug    String
+  
+}
+  
 model Product {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -80,6 +97,8 @@ model Product {
   options    String   // Changed Json[] to String to store JSON array as serialized string
   category   Category @relation(fields: [catSlug], references: [slug])
   catSlug    String
+  sub_category   SubCategory @relation(fields: [subSlug], references: [slug])
+  subSlug    String
   orderProducts OrderProduct[]
 }
 

@@ -63,7 +63,7 @@ export const POST = async (req: NextRequest) => {
     // Log the received order data for debugging (can be removed in production)
     console.log("Received order data:", body);
 
-    // Create a new order in the Order table
+    // Create a new order in the Order table split
     const order = await prisma.order.create({
       data: {
         price: body.price, 
@@ -83,7 +83,7 @@ export const POST = async (req: NextRequest) => {
     return jsonResponse(order, 201);
   } catch (err) {
     console.error("Error creating order:", err);
-    
+    // ADD PUT FOR ADD ORDER
     // Provide a more detailed error message if needed
     if (err instanceof Error) {
       return jsonResponse({ message: `Error: ${err.message}` }, 500);
