@@ -85,17 +85,32 @@ const CartPage = () => {
           <span className="font-bold">Ksh {totalPrice}</span>
         </div>
         <Image src="https://ik.imagekit.io/bja2qwwdjjy/Asset%201_yoafp2iSbQ.png?updatedAt=1721116147261" alt="" layout="contain" width={1000} height={20}></Image>
-
-        <button
-          className="bg-customGreen text-indigo-950 p-3 rounded-md  self-end"
-          onClick={() => router.push("/checkout")}>
-          CHECKOUT
-        </button>
-        <p className="text-sm text-gray-600">
-          *Please note that payment will be processed securely
-          {/* <Image src="https://ik.imagekit.io/bja2qwwdjjy/Asset%201_yoafp2iSbQ.png?updatedAt=1721116147261" alt="" layout="contain" width={1000} height={20}></Image> */}
-        </p>
+                 
+        <div className="flex justify-between gap-4">
+    <button
+        className="bg-customGreen text-indigo-950 p-3 rounded-md"
+        onClick={() => router.push("/checkout")}>
+        HOME DELIVERY
+    </button>
+    <button
+        className="bg-customGreen text-indigo-950 p-3 rounded-md">
+        ROOM SERVICE
+    </button>
+    <button
+        className="bg-customGreen text-indigo-950 p-3 rounded-md">
+        CHECKOUT
+    </button>
+    <button
+        className="bg-customGreen text-indigo-950 p-3 rounded-md"
+        onClick={() => router.push("/schedule")}>
+        SCHEDULE DELIVERY
+    </button>
+    <p className="text-sm text-gray-600">
+        *Please note that payment will be processed securely
+    </p>
+</div>
       </div>
+     
     </div>
   );
 };

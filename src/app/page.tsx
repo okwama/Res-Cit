@@ -12,7 +12,7 @@ export default function Home() {
     <main>
       <Special/> 
       <HomeMenu/>
-      <Offer/>
+      {/* <Offer/> */}
     </main>
   )
 }

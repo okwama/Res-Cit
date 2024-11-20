@@ -12,6 +12,7 @@ export type MenuType = {
     title: string;
     desc?: string; 
     img?: string;
+    slug  : String;
     price: number; 
     options?: { title: string; additionalPrice: number }[];
     };

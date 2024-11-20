@@ -32,11 +32,12 @@ export default function RootLayout({
           {/* <Notification /> */}
           <Navbar />
           {children}
-          <Footer />
+          
           <ToastContainer position="top-center" theme="dark" autoClose={3000}/>
         </div>
         </QueryProvider>
         </AuthProvider>
+        <Footer />
       </body>
     </html>
   );
