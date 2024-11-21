@@ -24,29 +24,38 @@ const CategoryPage = async ({ params }: Props) => {
   const products: ProductType[] = await getData(sub_category);
   return (
 
-    <div className="p-4 lg:px-20 xl:px-40 h-auto flex flex-wrap items-center overflow-hidden ">
-      {products.map((sub_category) => (
-        <Link
-          href={`/menu/${sub_category.slug}`}
-          key={sub_category.id as React.Key}
-          className="flex flex-col w-1/2 md:w-1/3 sm:w-1/2 lg:h-[250px] h-[150px] bg-cover p-2 overflow-hidden relative rounded-md"
-          
-        >
-          <div className="absolute inset-0 bg-customGreen opacity-0"></div> {/* Tint overlay */}
-          <div className="lg:px-20 xl:px-40 h-auto flex flex-wrap items-center overflow-hidden rounded-md">
-             {/* <Image src={`url(${sub_category.img})`} alt='' height={130} width={130}/> */}
-             <Image src={sub_category.img || '/place.png'} alt='' height={170} width={170} />
-          </div>
+    <div className="p-4 lg:px-20 xl:px-40 h-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  {products.map((sub_category) => (
+    <Link
+      href={`/menu/${sub_category.slug}`}
+      key={sub_category.id as React.Key}
+      className="flex flex-col items-center bg-white rounded-md shadow-md overflow-hidden relative group"
+    >
+      {/* Tint overlay */}
+      <div className="absolute inset-0 bg-customGreen opacity-0 group-hover:opacity-20 transition-opacity"></div>
 
-          <div className={`text-${sub_category.img} w-full flex flex-col relative z-10`}>
-            <h1 className="uppercase font-bold text-sm p-2">{sub_category.title}</h1>
-            {/* <p className="whitespace-wrap text-sm my-8">{sub_category.desc}</p> */}
+      {/* Image Section */}
+      <div className="w-full h-40 md:h-48 lg:h-56 flex items-center justify-center">
+        <Image
+          src={sub_category.img || '/place.png'}
+          alt={sub_category.title || 'Default Image'}
+          layout="intrinsic"
+          width={300} // Set a reasonable width for better scaling
+          height={300}
+          className="object-cover rounded-t-md"
+        />
+      </div>
 
-          </div>
-          
-        </Link>
-      ))}
-    </div>
+      {/* Text Section */}
+      <div className="w-full p-2 text-center mt-1">
+        <h1 className="uppercase font-bold text-sm md:text-base">{sub_category.title}</h1>
+        {/* Uncomment the description if needed */}
+        {/* <p className="text-xs md:text-sm mt-1 text-gray-500">{sub_category.desc}</p> */}
+      </div>
+    </Link>
+  ))}
+</div>
+
   );
 };
 
