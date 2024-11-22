@@ -1,17 +1,15 @@
-import React from 'react'
+import React from 'react';
 import Link from "next/link";
-import Image from 'next/image';
+
 const Footer = () => {
   return (
-    <div className='h-12 md:h-24 p-4 lg:px-20 xl:px-40 text-indigo-900 flex items-center justify-between '>
-  <Link href="/"> 
-  {/* <Image src="https://ik.imagekit.io/bja2qwwdjjy/Artboard%201@1.5x_sHGlLMjLB.png?updatedAt=1730979703401" alt="" className="h-8" width="50" height="100" /> */}
+    <div className='w-full h-12 md:h-24 p-4 lg:px-20 xl:px-40 text-cafnoir flex items-center justify-between bg-gray-800 text-white posit'>
+      <Link href="/"> 
+        <p className='text-xs md:text-sm font-semibold'>CIT Logistics</p>
+      </Link>
+      <p className='text-[10px] md:text-sm'>© 2024 Urban Point Restaurants. All Rights Reserved</p>
+    </div>
+  );
+};
 
-  <p className='text-[10px]'>CIT Logistics</p>
-  </Link>
-  <p className='text-[10px]'>© 2024 Macaash. All Rights Reserved</p>
-</div>
-  )
-}
-
-export default Footer
+export default Footer;

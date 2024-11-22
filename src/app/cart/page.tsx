@@ -14,103 +14,115 @@ const CartPage = () => {
     useCartStore.persist.rehydrate();
   }, []);
 
-  // const handleCheckout = async () => {
-  //   if (!session) {
-  //     router.push("/checkout");
-  //   } else {
-  //     try {
-  //       const res = await fetch("http://localhost:3000/api/orders", {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify({
-  //           price: totalPrice,
-  //           products,
-  //           status: "Not Paid!",
-  //           userEmail: session.user.email,
-  //         }),
-  //       });
-  //       const data =await res.json()
-  //       router.push(`/CheckoutPage/${data.id}`)
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  // };
+  const handleCheckout = async () => {
+    if (!session) {
+      router.push("/checkout");
+    } else {
+      try {
+        const res = await fetch("http://localhost:3000/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            price: totalPrice,
+            products,
+            status: "Not Paid!",
+            userEmail: session.user.email,
+          }),
+        });
+        const data = await res.json();
+        router.push(`/CheckoutPage/${data.id}`);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   return (
-    <div className="h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] flex flex-col text-indigo-950 lg:flex-row">
+    <div className="h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] flex flex-col lg:flex-row text-indigo-950">
       {/* PRODUCTS CONTAINER */}
-      <div className="h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2">
-        {/* SINGLE ITEM */}
-        <hr/>
+      <div className="flex flex-col gap-4 p-4 lg:w-2/3 2xl:w-1/2">
         {products.map((item) => (
-          
-          <div className="flex items-center justify-between mb-4" key={item.id}>
+          <div
+            className="flex flex-col sm:flex-row items-center sm:items-start p-3 border border-gray-300 rounded-lg shadow-md gap-4"
+            key={item.id}
+          >
+            {/* Product Image */}
             {item.img && (
-              <Image src={item.img} alt="" width={100} height={100} />
+              <Image
+                src={item.img}
+                alt={item.title}
+                width={100}
+                height={100}
+                className="object-contain"
+              />
             )}
-            <div className="">
-              <h1 className="uppercase text-sm font-bold ">
+            {/* Product Details */}
+            <div className="flex flex-col flex-1 text-center sm:text-left">
+              <h1 className="uppercase text-sm font-bold mb-2">
                 {item.title} (x{item.quantity})
               </h1>
-              <span>{item.optionTitle}</span>
+              <span className="text-gray-500">{item.optionTitle}</span>
             </div>
-            <h2 className="font-bold">Ksh. {item.price}</h2>
-            <span
-              className="cursor-pointer"
-              onClick={() => removeFromCart(item)}>
-              <Image src="https://ik.imagekit.io/bja2qwwdjjy/trash%20(1)_C3ZG3vzL2.png?updatedAt=1731237924670" alt="" width={35} height={35} />
-            </span><hr/>
-            </div>
-        ))}<hr/>
-        
+            {/* Product Price */}
+            <h2 className="font-bold text-lg mb-2 sm:mb-0 sm:text-right">Ksh. {item.price}</h2>
+            {/* Remove from Cart Button */}
+            <button onClick={() => removeFromCart(item)}>
+              <Image
+                src="https://ik.imagekit.io/bja2qwwdjjy/trash%20(1)_C3ZG3vzL2.png"
+                alt="Remove"
+                width={35}
+                height={35}
+                className="cursor-pointer"
+              />
+            </button>
+          </div>
+        ))}
       </div>
+
       {/* PAYMENT CONTAINER */}
-      <div className="h-1/2 p-4 bg-fuchsia-50 flex flex-col gap-4 justify-center md:h-1/2 lg:h-full lg:w-1/2 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6">
-        <div className="flex justify-between">
-          <span className="">Subtotal ({totalItems} items)</span>
-          <span className="">Ksh {totalPrice}</span>
+      <div className="flex flex-col gap-6 p-4 bg-fuchsia-50 rounded-lg lg:w-1/3 2xl:w-1/2 ">
+        <div className="flex justify-between text-lg font-medium">
+          <span>Subtotal ({totalItems} items)</span>
+          <span>Ksh {totalPrice}</span>
         </div>
-        {/* <div className="flex justify-between">
-          <span className="">Service Cost</span>
-          <span className="">Ksh</span>
+        <hr className="my-2 border-gray-300" />
+        <div className="flex justify-between text-xl font-bold">
+          <span>TOTAL (VAT INCL)</span>
+          <span>Ksh {totalPrice}</span>
         </div>
-        <div className="flex justify-between">
-          <span className="">Delivery Cost</span>
-          <span className="text-green-500">FREE!</span>
-        </div> */}
-        <hr className="my-2" />
-        <div className="flex justify-between">
-          <span className="">TOTAL(VAT INCL)</span>
-          <span className="font-bold">Ksh {totalPrice}</span>
+        <Image
+          src="https://ik.imagekit.io/bja2qwwdjjy/Asset%201_yoafp2iSbQ.png"
+          alt="Logo"
+          width={1000}
+          height={20}
+          className="mx-auto max-w-full object-contain"
+        />
+
+        <div className="flex flex-col gap-4 mb-1">
+          <button
+            className="bg-customGreen text-indigo-950 p-3 rounded-md w-full hover:bg-green-600 transition"
+            onClick={() => router.push("/checkout")}
+          >
+            HOME DELIVERY
+          </button>
+          {/* <button className="bg-customGreen text-indigo-950 p-3 rounded-md w-full hover:bg-green-600 transition">
+            ROOM SERVICE
+          </button> */}
+          <button
+            className="bg-customGreen text-indigo-950 p-3 rounded-md w-full hover:bg-green-600 transition"
+            onClick={handleCheckout}
+          >
+            CHECKOUT
+          </button>
+          <button
+            className="bg-customGreen text-indigo-950 p-3 rounded-md w-full hover:bg-green-600 transition mb-1"
+            onClick={() => router.push("/schedule")}
+          >
+            SCHEDULE DELIVERY
+          </button>
         </div>
-        <Image src="https://ik.imagekit.io/bja2qwwdjjy/Asset%201_yoafp2iSbQ.png?updatedAt=1721116147261" alt="" layout="contain" width={1000} height={20}></Image>
-                 
-        <div className="flex justify-between gap-4">
-    <button
-        className="bg-customGreen text-indigo-950 p-3 rounded-md"
-        onClick={() => router.push("/checkout")}>
-        HOME DELIVERY
-    </button>
-    <button
-        className="bg-customGreen text-indigo-950 p-3 rounded-md">
-        ROOM SERVICE
-    </button>
-    <button
-        className="bg-customGreen text-indigo-950 p-3 rounded-md">
-        CHECKOUT
-    </button>
-    <button
-        className="bg-customGreen text-indigo-950 p-3 rounded-md"
-        onClick={() => router.push("/schedule")}>
-        SCHEDULE DELIVERY
-    </button>
-    <p className="text-sm text-gray-600">
-        *Please note that payment will be processed securely
-    </p>
-</div>
       </div>
-     
+      
     </div>
   );
 };

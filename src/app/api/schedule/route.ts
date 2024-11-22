@@ -14,14 +14,21 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
+    // Log the incoming data for debugging
+    console.log("Scheduling delivery with data:", { date, time, address, orderId });
+
     // Create the delivery record
     const scheduledDelivery = await prisma.delivery.create({
       data: {
-        date: new Date(date), // Ensure date is a Date object
+        date: new Date(date), // Ensure the date is in a valid format
         time,
         address,
-        order: { connect: { id: orderId } } // Connect to the existing order
-      },
+        order: {
+          connect: {
+            id: orderId // Correctly pass orderId as a string
+          }
+        }
+      }
     });
 
     return new NextResponse(
@@ -29,10 +36,20 @@ export const POST = async (req: NextRequest) => {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error scheduling delivery:", error);
-    return new NextResponse(
-      JSON.stringify({ message: "Internal server error." }),
-      { status: 500 }
-    );
+    // Check if the error is an instance of Error
+    if (error instanceof Error) {
+      console.error("Error scheduling delivery:", error.message,);
+      return new NextResponse(
+        JSON.stringify({ message: "Internal server error.", error: error.message }),
+        { status: 500 }
+      );
+    } else {
+      // Handle unexpected error types
+      console.error("Unexpected error scheduling delivery:", error);
+      return new NextResponse(
+        JSON.stringify({ message: "Internal server error." }),
+        { status: 500 }
+      );
+    }
   }
 };

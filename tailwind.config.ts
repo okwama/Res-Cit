@@ -13,9 +13,17 @@ const config: Config = {
         foreground: "var(--foreground)",
         customGreen: '#a8b49e', // You can name it anything, like 'customGreen'
         bggreen:'#d9ded4',
+        cafnoir: '#48290Fff',
+        black: '#000000ff',
+        black2: '#000000ff',
+        persianorange: '#E7975Eff',
+        tangerine: '#EA8A23ff',
+
       },
     },
   },
   plugins: [],
 };
 export default config;
+
+

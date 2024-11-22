@@ -7,13 +7,13 @@ import Footer from "@/components/Footer";
 import AuthProvider from "@/components/AuthProvider";
 import QueryProvider from "@/components/QueryProvider";
 import { ToastContainer } from "react-toastify";
-import'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MAA",
-  description: "Hotel & Suites",
+  title: "Urban Point Restaurant",
+  description: "Restaurant",
 };
 
 export default function RootLayout({
@@ -26,18 +26,17 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <QueryProvider>
-
-          
-        <div>
-          {/* <Notification /> */}
-          <Navbar />
-          {children}
-          
-          <ToastContainer position="top-center" theme="dark" autoClose={3000}/>
-        </div>
-        </QueryProvider>
+            <div className="flex flex-col min-h-screen"> {/* Added flex and min-h-screen */}
+              {/* <Notification /> */}
+              <Navbar />
+              <main className="flex-grow"> {/* This will allow the main content to grow */}
+                {children}
+              </main>
+              <ToastContainer position="top-center" theme="dark" autoClose={3000} />
+              <Footer /> {/* Footer is now at the bottom of the flex container */}
+            </div>
+          </QueryProvider>
         </AuthProvider>
-        <Footer />
       </body>
     </html>
   );
